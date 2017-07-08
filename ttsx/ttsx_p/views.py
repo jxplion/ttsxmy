@@ -14,7 +14,7 @@ def index(request):
         nlist = t1.goodsinfo_set.order_by('-id')[0:4]
         clist = t1.goodsinfo_set.order_by('-gclick')[0:3]
         goodslist.append({'t1':t1,'nlist':nlist,'clist':clist})
-    context = {'title':'首页', 'glist':goodslist}
+    context = {'title':'首页', 'glist':goodslist,'car':'1'}
     return render(request, 'ttsx_p/index.html', context)
 
 
@@ -31,14 +31,24 @@ def list(request, pindex, porder, pIndex):
         alist = t.goodsinfo_set.order_by('-gprice')
     elif porder == 'c':
         alist = t.goodsinfo_set.order_by('-gclick')
-    p = Paginator(alist, 15)
+
+    p = Paginator(alist, 1)
     # 如果当前没有传递页码信息，则认为是第一页，这样写是为了请求第一页时可以不写页码
     if pIndex == '':
         pIndex = '1'
     pIndex = int(pIndex)
+    # if pIndex < 1:
+    #     pIndex = 1
+    # elif pIndex > p.num_pages:
+    #     pIndex = p.num_pages
     alist = p.page(pIndex)
-    pii = p.page_range
-    context = {'title':t.ttitle, 'porder':porder , 'nlist':nlist, 'alist':alist,'t':t,'pIndex':pIndex}
+    context = {'title':t.ttitle,
+               'car':'1',
+               'porder':porder ,
+               'nlist':nlist,
+               'alist':alist,
+               't':t,
+               'pIndex':pIndex}
     return render(request, 'ttsx_p/list.html', context)
 
 
@@ -46,5 +56,5 @@ def detail(request, item_num):
     item = GoodsInfo.objects.get(id=item_num)
     t = item.gtype
     nlist = t.goodsinfo_set.order_by('-id')[0:3]
-    context = {'title':item.gtitle, 'item':item, 'nlist':nlist, 't':t}
+    context = {'title':item.gtitle,'car':'1', 'item':item, 'nlist':nlist, 't':t}
     return render(request, 'ttsx_p/detail.html', context)

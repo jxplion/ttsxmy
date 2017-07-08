@@ -1,9 +1,56 @@
 {%extends 'base.html'%}
+	{%block head%}
+		<script>
+			var right_name = true;
+			var right_pwd = true;
+			$(function () {
+				$('.name_input').blur(function () {
+					var len = $(this).val().length;
+					if(len<5||len>20)
+					{
+						$(this).next().html('请输入5-20个字符的用户名').show();
+						right_name = false;
+					}
+					else
+					{
+						$(this).next().hide();
+						right_name = true;
+					}
+                });
+				$('.pass_input').blur(function () {
+					var len = $(this).val().length;
+					if(len<8||len>20)
+					{
+						$(this).next().html('密码最少8位，最长20位').show();
+						right_pwd = false;
+					}
+					else
+					{
+						$(this).next().hide();
+						right_pwd = true;
+					}
+                });
+
+				$('form').submit(function () {
+					$('.name_input').blur();
+					$('.pass_input').blur();
+					return right_name && right_pwd
+                });
+				if('{{name_error}}' == '1'){
+				  	$('.user_error').html('用户名错误').show();
+				  	right_name = false;
+				}
+				if('{{pwd_error}}' == '1'){
+				    $('.pwd_error').html('密码错误').show();
+				    right_pwd = false;
+				}
+            })
+		</script>
+	{%endblock head%}
 	{%block body%}
 	<div class="login_top clearfix">
-		<a href="index.html" class="login_logo"><img src="/static/images/logo02.png"></a>
+		<a href="/index/" class="login_logo"><img src="/static/images/logo02.png"></a>
 	</div>
-
 	<div class="login_form_bg">
 		<div class="login_form_wrap clearfix">
 			<div class="login_banner fl"></div>
@@ -11,16 +58,17 @@
 			<div class="login_form fr">
 				<div class="login_title clearfix">
 					<h1>用户登录</h1>
-					<a href="#">立即注册</a>
+					<a href="/user/register/">立即注册</a>
 				</div>
 				<div class="form_input">
-					<form>
-						<input type="text" name="username" class="name_input" placeholder="请输入用户名">
+					<form method="post" action="/user/login_handle/">
+						{%csrf_token%}
+						<input type="text" name="user_name" class="name_input" placeholder="请输入用户名" value="{{uname}}">
 						<div class="user_error">输入错误</div>
-						<input type="password" name="pwd" class="pass_input" placeholder="请输入密码">
+						<input type="password" name="user_pwd" class="pass_input" placeholder="请输入密码" value="{{upwd}}">
 						<div class="pwd_error">输入错误</div>
 						<div class="more_input clearfix">
-							<input type="checkbox" name="">
+							<input type="checkbox" checked="checked" name="checked" value="1">
 							<label>记住用户名</label>
 							<a href="#">忘记密码</a>
 						</div>

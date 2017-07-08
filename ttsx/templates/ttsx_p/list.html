@@ -1,0 +1,100 @@
+{%extends 'base.html'%}
+    {%block body%}
+	<div class="search_bar clearfix">
+		<a href="/index/" class="logo fl"><img src="/static/images/logo.png"></a>
+		<div class="search_con fl">
+			<input type="text" class="input_text fl" name="" placeholder="搜索商品">
+			<input type="button" class="input_btn fr" name="" value="搜索">
+		</div>
+		<div class="guest_cart fr">
+			<a href="#" class="cart_name fl">我的购物车</a>
+			<div class="goods_count fl">1</div>
+		</div>
+	</div>
+
+	<div class="navbar_con">
+		<div class="navbar clearfix">
+			<div class="subnav_con fl">
+				<h1>全部商品分类</h1>	
+				<span></span>			
+				<ul class="subnav">
+					<li><a href="/list1/" class="fruit">新鲜水果</a></li>
+					<li><a href="/list2/" class="seafood">海鲜水产</a></li>
+					<li><a href="/list3/" class="meet">猪牛羊肉</a></li>
+					<li><a href="/list4/" class="egg">禽类蛋品</a></li>
+					<li><a href="/list5/" class="vegetables">新鲜蔬菜</a></li>
+					<li><a href="/list6/" class="ice">速冻食品</a></li>
+				</ul>
+			</div>
+			<ul class="navlist fl">
+				<li><a href="/">首页</a></li>
+				<li class="interval">|</li>
+				<li><a href="#">手机生鲜</a></li>
+				<li class="interval">|</li>
+				<li><a href="#">抽奖</a></li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="breadcrumb">
+		<a href="#">全部分类</a>
+		<span>></span>
+		<a href="/list{{t.id}}/">{{t.ttitle}}</a>
+	</div>
+
+	<div class="main_wrap clearfix">
+		<div class="l_wrap fl clearfix">
+			<div class="new_goods"><!--r热门-->
+				<h3>新品推荐</h3>
+				<ul>
+					{%for n in nlist%}
+					<li>
+						<a href="/detail{{n.id}}/"><img src="/static/{{n.gpic}}"></a>
+						<h4><a href="/detail{{n.id}}/">{{n.gtitle}}</a></h4>
+						<div class="prize">￥{{n.gprice}}</div>
+					</li>
+					{%endfor%}
+				</ul>
+			</div>
+		</div>
+
+		<div class="r_wrap fr clearfix">
+			<div class="sort_bar">
+				<a href="/list{{t.id}}_a/" class="active">默认</a>
+				<a href="/list{{t.id}}_b/">价格</a>
+				<a href="/list{{t.id}}_c/">人气</a>
+			</div>
+			<!--全部-->
+			<ul class="goods_type_list clearfix">
+				{%for a in alist%}
+				<li>
+					<a href="/detail{{a.id}}/"><img src="/static/{{a.gpic}}"></a>
+					<h4><a href="/detail{{a.id}}/">{{a.gtitle}}</a></h4>
+					<div class="operate">
+						<span class="prize">￥{{a.gprice}}</span>
+						<span class="unit">{{a.gprice}}/{{a.gunit}}</span>
+						<a href="#" class="add_goods" title="加入购物车"></a>
+					</div>
+				</li>
+				{%endfor%}
+			</ul>
+
+			<div class="pagenation">
+				{%if alist.has_previous%}
+					<a href="/list{{t.id}}_{{porder}}_{{alist.number|add:-1}}/"><上一页</a>
+				{%endif%}
+				{%for pi in alist.paginator.page_range%}
+					{%if alist.number == pi%}
+						<a class="active">{{pi}}</a>
+					{%else%}
+						<a href="/list{{t.id}}_{{porder}}_{{pi}}/">{{pi}}</a>
+					{%endif%}
+				{%endfor%}
+				{%if alist.has_next%}
+					<a href="/list{{t.id}}_{{porder}}_{{alist.number|add:1}}/">下一页></a>
+				{%endif%}
+
+			</div>
+		</div>
+	</div>
+{%endblock body%}

@@ -19,42 +19,54 @@ def index(request):
 
 
 def list(request, pindex, porder, pIndex):
-    # 查询分类
-    t = TypeInfo.objects.get(id=pindex)
-    # 查询最新2个
-    nlist = t.goodsinfo_set.order_by('-id')[0:2]
-    # 查询全部商品
-    # a热门b加个c人气
-    if porder == 'a' or porder == '':
-        alist = t.goodsinfo_set.order_by('-id')
-    elif porder == 'b':
-        alist = t.goodsinfo_set.order_by('-gprice')
-    elif porder == 'c':
-        alist = t.goodsinfo_set.order_by('-gclick')
+    try:
+        # 查询分类
+        t = TypeInfo.objects.get(id=pindex)
+        # 查询最新2个
+        nlist = t.goodsinfo_set.order_by('-id')[0:2]
+        # 查询全部商品
+        # a热门b加个c人气
+        if porder == 'a' or porder == '':
+            alist = t.goodsinfo_set.order_by('-id')
+        elif porder == 'b':
+            alist = t.goodsinfo_set.order_by('-gprice')
+        elif porder == 'c':
+            alist = t.goodsinfo_set.order_by('-gclick')
 
-    p = Paginator(alist, 1)
-    # 如果当前没有传递页码信息，则认为是第一页，这样写是为了请求第一页时可以不写页码
-    if pIndex == '':
-        pIndex = '1'
-    pIndex = int(pIndex)
-    # if pIndex < 1:
-    #     pIndex = 1
-    # elif pIndex > p.num_pages:
-    #     pIndex = p.num_pages
-    alist = p.page(pIndex)
-    context = {'title':t.ttitle,
-               'car':'1',
-               'porder':porder ,
-               'nlist':nlist,
-               'alist':alist,
-               't':t,
-               'pIndex':pIndex}
-    return render(request, 'ttsx_p/list.html', context)
+        p = Paginator(alist, 5)
+        # 如果当前没有传递页码信息，则认为是第一页，这样写是为了请求第一页时可以不写页码
+        if pIndex == '':
+            pIndex = '1'
+        pIndex = int(pIndex)
+        # if pIndex < 1:
+        #     pIndex = 1
+        # elif pIndex > p.num_pages:
+        #     pIndex = p.num_pages
+        alist = p.page(pIndex)
+        context = {'title':t.ttitle,
+                   'car':'1',
+                   'porder':porder ,
+                   'nlist':nlist,
+                   'alist':alist,
+                   't':t,
+                   'pIndex':pIndex}
+        return render(request, 'ttsx_p/list.html', context)
+    except:
+        return render(request, '404.html', {'title': 'wu'})
 
 
 def detail(request, item_num):
-    item = GoodsInfo.objects.get(id=item_num)
-    t = item.gtype
-    nlist = t.goodsinfo_set.order_by('-id')[0:3]
-    context = {'title':item.gtitle,'car':'1', 'item':item, 'nlist':nlist, 't':t}
-    return render(request, 'ttsx_p/detail.html', context)
+    try:
+        item = GoodsInfo.objects.get(id=item_num)
+        item.gclick += 1  # 人气+1
+        item.save()
+        t = item.gtype
+        nlist = t.goodsinfo_set.order_by('-id')[0:3]
+        context = {'title': item.gtitle,
+                   'car': '1',
+                   'item': item,
+                   'nlist': nlist,
+                   't': t}
+        return render(request, 'ttsx_p/detail.html', context)
+    except:
+        return render(request, '404.html', {'title':'wu'})

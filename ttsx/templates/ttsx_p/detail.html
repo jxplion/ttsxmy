@@ -1,30 +1,29 @@
-{%extends 'base.html'%}
-    {%block body%}
+{%extends 'ttsx_p/base.html'%}
 
-	<div class="navbar_con">
-		<div class="navbar clearfix">
-			<div class="subnav_con fl">
-				<h1>全部商品分类</h1>	
-				<span></span>			
-				<ul class="subnav">
-					<li><a href="/list1/" class="fruit">新鲜水果</a></li>
-					<li><a href="/list2/" class="seafood">海鲜水产</a></li>
-					<li><a href="/list3/" class="meet">猪牛羊肉</a></li>
-					<li><a href="/list4/" class="egg">禽类蛋品</a></li>
-					<li><a href="/list5/" class="vegetables">新鲜蔬菜</a></li>
-					<li><a href="/list6/" class="ice">速冻食品</a></li>
-				</ul>
-			</div>
-			<ul class="navlist fl">
-				<li><a href="/">首页</a></li>
-				<li class="interval">|</li>
-				<li><a href="#">手机生鲜</a></li>
-				<li class="interval">|</li>
-				<li><a href="#">抽奖</a></li>
-			</ul>
-		</div>
-	</div>
+{%block head%}
+<script type="text/javascript">
+	$(function () {
+		$('#add_cart').click(function(){
+		    var $add_x = $('#add_cart').offset().top;
+			var $add_y = $('#add_cart').offset().left;
 
+			var $to_x = $('#show_count').offset().top;
+			var $to_y = $('#show_count').offset().left;
+			$(".add_jump").css({'left':$add_y+80,'top':$add_x+10,'display':'block'})
+			$(".add_jump").stop().animate({
+				'left': $to_y+7,
+				'top': $to_x+7},
+				"fast", function() {
+					$(".add_jump").fadeOut('fast',function(){
+						$('#show_count').html(2);
+					});
+			});
+		})
+    })
+	</script>
+{%endblock head%}
+
+    {%block detial%}
 	<div class="breadcrumb">
 		<a href="#">全部分类</a>
 		<span>></span>
@@ -58,63 +57,28 @@
 			</div>
 		</div>
 	</div>
+	{%endblock detial%}
 
-	<div class="main_wrap clearfix">
-		<div class="l_wrap fl clearfix">
-			<div class="new_goods">
-				<h3>新品推荐</h3>
-				<ul>
-					{%for n in nlist%}
-					<li>
-						<a href="/detail{{n.id}}/"><img src="/static/{{n.gpic}}"></a>
-						<h4><a href="/detail{{n.id}}/">{{n.gtitle}}</a></h4>
-						<div class="prize">￥{{n.gprice}}</div>
-					</li>
-					{%endfor%}
+
+	{%block detial1%}
+			<div class="r_wrap fr clearfix">
+				<ul class="detail_tab clearfix">
+					<li class="active">商品介绍</li>
+					<li>评论</li>
 				</ul>
+
+				<div class="tab_content">
+					<dl>
+						<dt>商品详情：</dt>
+						<dd>{{item.gcontent|safe}}</dd>
+					</dl>
+				</div>
+
 			</div>
 		</div>
+	{%endblock detial1%}
 
-		<div class="r_wrap fr clearfix">
-			<ul class="detail_tab clearfix">
-				<li class="active">商品介绍</li>
-				<li>评论</li>
-			</ul>
 
-			<div class="tab_content">
-				<dl>
-					<dt>商品详情：</dt>
-					<dd>{{item.gcontent|safe}}</dd>
-				</dl>
-			</div>
+	<div class="add_jump"></div>
 
-		</div>
-	</div>
 
-{%endblock body%}
-	<!--<div class="add_jump"></div>-->
-
-	<!--<script type="text/javascript" src="../ttsx/static/js/jquery-1.12.2.js"></script>-->
-	<!--<script type="text/javascript">-->
-		<!--var $add_x = $('#add_cart').offset().top;-->
-		<!--var $add_y = $('#add_cart').offset().left;-->
-
-		<!--var $to_x = $('#show_count').offset().top;-->
-		<!--var $to_y = $('#show_count').offset().left;-->
-
-		<!--$(".add_jump").css({'left':$add_y+80,'top':$add_x+10,'display':'block'})-->
-		<!--$('#add_cart').click(function(){-->
-			<!--$(".add_jump").stop().animate({-->
-				<!--'left': $to_y+7,-->
-				<!--'top': $to_x+7},-->
-				<!--"fast", function() {-->
-					<!--$(".add_jump").fadeOut('fast',function(){-->
-						<!--$('#show_count').html(2);-->
-					<!--});-->
-
-			<!--});-->
-		<!--})-->
-	<!--</script>-->
-	<!---->
-<!--</body>-->
-<!--</html>-->

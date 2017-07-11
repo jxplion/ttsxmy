@@ -2,6 +2,7 @@
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from models import *
+from ttsx_p.models import GoodsInfo
 from hashlib import sha1
 from datetime import datetime, timedelta
 
@@ -63,6 +64,8 @@ def login_handle(request):
             # 保存登录
             request.session['uid'] = ui[0].id
             request.session['uname'] = uname
+            request.session.set_expiry(0)
+
             # 记住用户名
             path =  request.session.get('url_path', '/user/')
             response = redirect(path)
@@ -90,16 +93,19 @@ def yanzheng(fn):
 @yanzheng
 def center(request):
     ui = Userinfo.objects.get(id=request.session.get('uid'))
-    request.session.set_expiry(0)
-    context = {'title':'用户中心','ui':ui}
+    gdlist = request.COOKIES.get('scan','').split(',')
+    gdlist.pop()
+    g_list = []
+    for gid in gdlist:
+        g_list.append(GoodsInfo.objects.get(id=gid))
+
+    context = {'title':'用户中心','ui':ui, 'glist':g_list}
     return render(request, 'ttsx_user/center.html', context)
 
 
 @yanzheng
 def order(request):
     ui = Userinfo.objects.get(id=request.session['uid'])
-    request.session.set_expiry(0)
-
     context = {'title':'订单中心','ui':ui}
     return render(request, 'ttsx_user/order.html', context)
 
@@ -107,7 +113,6 @@ def order(request):
 @yanzheng
 def site(request):
     ui = Userinfo.objects.get(id=request.session['uid'])
-    request.session.set_expiry(0)
     if request.method=='POST':
         post = request.POST
         ui.user_shou = post.get('ushou')

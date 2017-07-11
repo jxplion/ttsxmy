@@ -1,0 +1,65 @@
+{%extends 'ttsx_p/base.html'%}
+{%block left%}{%endblock left%}
+{%block detial1%}
+			<ul class="goods_type_list clearfix">
+				{%for a in page_obj%}
+				<li>
+					<a href="/detail{{a.object.id}}/"><img src="/static/{{a.object.gpic}}"></a>
+					<h4><a href="/detail{{a.object.id}}/">{{a.object.gtitle}}</a></h4>
+					<div class="operate">
+						<span class="prize">￥{{a.object.gprice}}</span>
+						<span class="unit">{{a.object.gprice}}/{{a.object.gunit}}</span>
+						<a href="#" class="add_goods" title="加入购物车"></a>
+					</div>
+				</li>
+				{%endfor%}
+			</ul>
+
+			<div class="pagenation">
+				{%if page_obj.has_previous%}
+					<a href="?q={{query}}&amp;page=1">首页</a>
+					<a href="?q={{query}}&amp;page={{page_obj.number|add:-1}}">上一页</a>
+				{%endif%}
+				
+				{%for pindex in page_obj.paginator.page_range%}
+    				{%if pindex == page_obj.number%}
+					<a href="#" class="active">{{pindex}}</a>
+    				{%elif pindex < page_obj.number|add:3 and pindex > page_obj.number|add:-3%}
+						<a href="?q={{query}}&amp;page={{pindex}}">{{pindex}}</a>
+    				{%endif%}
+				{%endfor%}
+				
+				{%if page_obj.has_next%}
+					<a href="?q={{query}}&amp;page={{page_obj.number|add:1}}">下一页</a>
+					<a href="?q={{query}}&amp;page={{page_obj.paginator.num_pages}}">末页</a>
+				{%endif%}
+			</div>
+		</div>
+	</div>
+
+
+{%endblock detial1%}
+
+<html>
+<head>
+    <title>全文检索--结果页</title>
+</head>
+<body>
+<h1>搜索&nbsp;<b>{{query}}</b>&nbsp;结果如下：</h1>
+<ul>
+{%for item in page%}
+    <li>{{item.object.id}}--{{item.object.gcontent|safe}}</li>
+{%empty%}
+    <li>啥也没找到</li>
+{%endfor%}
+</ul>
+<hr>
+{%for pindex in page.paginator.page_range%}
+    {%if pindex == page.number%}
+        {{pindex}}&nbsp;&nbsp;
+    {%else%}
+        <a href="?q={{query}}&amp;page={{pindex}}">{{pindex}}</a>&nbsp;&nbsp;
+    {%endif%}
+{%endfor%}
+</body>
+</html>

@@ -18,8 +18,10 @@
 						$('#show_count').html(2);
 					});
 			});
-		})
-    })
+		});
+
+		$.get('/detailed/',{'item':'{{item.id}}'});
+    });
 	</script>
 {%endblock head%}
 

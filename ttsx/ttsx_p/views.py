@@ -1,5 +1,7 @@
 # coding=utf-8
+from django.http import JsonResponse
 from django.shortcuts import render
+from haystack.generic_views import SearchView
 from models import *
 from django.core.paginator import Paginator
 # Create your views here.
@@ -70,3 +72,36 @@ def detail(request, item_num):
         return render(request, 'ttsx_p/detail.html', context)
     except:
         return render(request, '404.html', {'title':'wu'})
+
+
+def detailed(request):
+    scan = request.COOKIES.get('scan', '').split(',')
+    goods_id = request.GET.get('item')
+    if goods_id in scan:
+        scan.remove(goods_id)
+    scan.insert(0, goods_id)
+    if len(scan) > 6:
+        scan.pop()
+    response = JsonResponse({'scan':scan})
+    response.set_cookie('scan',','.join(scan), max_age=60*60*24*7)
+    print ','.join(scan)
+    return response
+
+
+class MySearchView(SearchView):
+    def get_context_data(self, *args, **kwargs):
+        context = super(MySearchView, self).get_context_data(*args, **kwargs)
+        context['car']='1'
+        # page_range = []
+        # page = context.get('page_obj')
+        # if page.number <= 2:
+        #     page_range = range(1, 6)
+        # elif page.number >= page.paginator.num_pages - 1:
+        #     page_range=range(page.paginator.num_pages-4,page.paginator.num_pages+1)
+        # else:
+        #     for pindex in page.paginator.num_pages:
+        #         if page.number-3 < pindex < page.number+3:
+        #             page_range.append(pindex)
+        # context['page_range'] = page_range
+
+        return context

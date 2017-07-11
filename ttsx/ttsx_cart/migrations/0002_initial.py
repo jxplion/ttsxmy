@@ -16,9 +16,9 @@ class Migration(migrations.Migration):
             name='CartInfo',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('goods_num', models.IntegerField(max_length=1000)),
-                ('goods_id', models.ForeignKey(to='ttsx_p.GoodsInfo')),
-                ('user_id', models.ForeignKey(to='ttsx_user.Userinfo')),
+                ('count', models.IntegerField()),
+                ('goods', models.ForeignKey(to='ttsx_p.GoodsInfo')),
+                ('user', models.ForeignKey(to='ttsx_user.Userinfo')),
             ],
         ),
     ]

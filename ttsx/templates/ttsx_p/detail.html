@@ -3,24 +3,61 @@
 {%block head%}
 <script type="text/javascript">
 	$(function () {
+	    $('.num_show').blur(function () {
+					    //验证输入的数量是否合法
+			num=parseInt($(this).val());
+			kucun=parseInt($('#kucun').val());
+			if(num<1){
+			    num=1;
+			}
+			if(num>kucun){
+			    num=kucun;
+			}
+			if(isNaN(num)){
+			    num=1;
+			}
+			$(this).val(num);
+			//计算总价
+			price=parseFloat($('.show_pirze em').text());
+			total=price*num;
+			$('.total em').text(total.toFixed(2)+'元');
+        });
+		$('.add').click(function () {
+		    num=parseInt($('.num_show').val());
+		    num++;
+		    $('.num_show').val(num).blur();
+        });
+		$('.minus').click(function () {
+		    num=parseInt($('.num_show').val());
+		    num--;
+		    $('.num_show').val(num).blur();
+        });
+
 		$('#add_cart').click(function(){
 		    var $add_x = $('#add_cart').offset().top;
 			var $add_y = $('#add_cart').offset().left;
 
 			var $to_x = $('#show_count').offset().top;
 			var $to_y = $('#show_count').offset().left;
-			$(".add_jump").css({'left':$add_y+80,'top':$add_x+10,'display':'block'})
+			$(".add_jump").css({'left':$add_y+80,'top':$add_x+10,'display':'block'});
 			$(".add_jump").stop().animate({
 				'left': $to_y+7,
 				'top': $to_x+7},
-				"fast", function() {
+				1000, function() {
 					$(".add_jump").fadeOut('fast',function(){
 						$('#show_count').html(2);
 					});
 			});
+
+			$.get('/cart/addcart/', {'itemid':'{{item.id}}','itemnum':$('.num_show').val()}, function (dat) {
+				carnum == $('#show_count').val();
+				carnum += dat.backnum;
+				$('#show_count').val(carnum);
+            });
 		});
 
 		$.get('/detailed/',{'item':'{{item.id}}'});
+
     });
 	</script>
 {%endblock head%}
@@ -77,10 +114,10 @@
 				</div>
 
 			</div>
-		</div>
+		</div><div class="add_jump"></div>
 	{%endblock detial1%}
 
 
-	<div class="add_jump"></div>
+
 
 

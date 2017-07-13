@@ -127,3 +127,10 @@ def site(request):
 def logout(request):
     request.session.flush()
     return redirect('/index/')
+
+
+def islogin(request):
+    res = 0
+    if request.session.has_key('uid'):
+        res = 1
+    return JsonResponse({'islogin':res})

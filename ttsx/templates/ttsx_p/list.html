@@ -1,5 +1,25 @@
 {%extends 'ttsx_p/base.html'%}
 
+	{%block head%}
+	<script>
+		function add_cart(itemid) {
+			$.get('/user/islogin/',function (dat) {
+				if(dat.islogin){
+				    $.get('/cart/addcart/', {'itemid':itemid},function (dat){
+				        if(dat.isadd){
+				            alert('加入购物车成功')
+						}else{
+				            alert('加入购物车失败')
+						}
+					});
+				}else{
+					location.href = '/user/login'
+				}
+            });
+        }
+	</script>
+	{%endblock head%}
+
     {%block detial%}
 	<div class="breadcrumb">
 			<a href="#">全部分类</a>
@@ -25,7 +45,7 @@
 					<div class="operate">
 						<span class="prize">￥{{a.gprice}}</span>
 						<span class="unit">{{a.gprice}}/{{a.gunit}}</span>
-						<a href="#" class="add_goods" title="加入购物车"></a>
+						<a href="javascript:add_cart({{a.id}})" class="add_goods" title="加入购物车"></a>
 					</div>
 				</li>
 				{%endfor%}

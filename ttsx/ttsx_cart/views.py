@@ -31,7 +31,8 @@ def addcart(request):
             c.user_id = userid
         print userid, itemid, itemnum # 1 41 1
         c.save()
-        return  JsonResponse({'isadd':1})
+        gnum = c.count
+        return  JsonResponse({'isadd':1,'gnum':gnum})
     except:
         return JsonResponse({'isadd': 0})
 
@@ -42,5 +43,14 @@ def countt(request):
     return JsonResponse({'cart_count':cart_count})
 
 
+@yanzheng
 def reorder(request):
-    return render(request, 'ttsx_cart/reorder.html')
+    clist = request.GET.get('cstr')
+    print clist
+    context = {'title':'提交订单', 'clist':clist}
+    return render(request, 'ttsx_cart/reorder.html', context)
+
+
+def reo(request):
+    clist = request.GET.get('clist')
+    return JsonResponse({'isorder':1, 'cstr':clist})

@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d47523c4-1770-4353-a3e3-448aff675dc2" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ttsx/ttsx_cart/migrations/0003_auto_20170714_1039.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ttsx/templates/ttsx_cart/cart.html" afterPath="$PROJECT_DIR$/ttsx/templates/ttsx_cart/cart.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ttsx/templates/ttsx_cart/reorder.html" afterPath="$PROJECT_DIR$/ttsx/templates/ttsx_cart/reorder.html" />

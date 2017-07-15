@@ -7,6 +7,7 @@
 				if(dat.islogin){
 				    $.get('/cart/addcart/', {'itemid':itemid},function (dat){
 				        if(dat.isadd){
+				            cart1();
 				            alert('加入购物车成功')
 						}else{
 				            alert('加入购物车失败')

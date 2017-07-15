@@ -34,27 +34,28 @@
         });
 
 		$('#add_cart').click(function(){
-			$.get('user/islogin/',function (dat) {
+			$.get('/user/islogin/',function (dat) {
 				if(dat.islogin){
-				    $.get('/cart/addcart/', {'itemid':'{{item.id}}','itemnum':$('.num_show').val()}, function (dat) {
-				if (dat.isadd){
-					var $add_x = $('#add_cart').offset().top;
-					var $add_y = $('#add_cart').offset().left;
-					var $to_x = $('#show_count').offset().top;
-					var $to_y = $('#show_count').offset().left;
-					$(".add_jump").css({'left':$add_y+80,'top':$add_x+10,'display':'block'});
-					$(".add_jump").stop().animate({
-						'left': $to_y+7,
-						'top': $to_x+7},
-						1000, function() {
-							$(".add_jump").fadeOut('fast',function(){
-								$('#show_count').html(2);
+					$.get('/cart/addcart/', {'itemid':'{{item.id}}','itemnum':$('.num_show').val()}, function (dat) {
+						if (dat.isadd){
+							var $add_x = $('#add_cart').offset().top;
+							var $add_y = $('#add_cart').offset().left;
+							var $to_x = $('#show_count').offset().top;
+							var $to_y = $('#show_count').offset().left;
+							$(".add_jump").css({'left':$add_y+80,'top':$add_x+10,'display':'block'});
+							$(".add_jump").stop().animate({
+								'left': $to_y+7,
+								'top': $to_x+7},
+								1000, function() {
+									$(".add_jump").fadeOut('fast',function(){
+									    cart1()
+
+									});
 							});
+						}else{
+							alert('加入购物车失败')
+						}
 					});
-				}else{
-				    alert('加入购物车失败')
-				}
-            });
 				}else {
 				    location.href = '/user/login'
 				}

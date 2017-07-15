@@ -1,6 +1,17 @@
 {%extends 'base.html'%}
-	{%block body%}
+{%block head%}
+	<script>
+		$(function () {
+			$('.order_goods_list').each(function () {
+				$(this).find('.col04').children().text((
+				    parseFloat($(this).find('em').children().text())*parseInt($(this).find('.col03').text())
+				).toFixed(2));
+			});
 
+        });
+	</script>
+{%endblock head%}
+	{%block body%}
 		<div class="main_con clearfix">
 				<div class="left_menu_con clearfix">
 					<h3>用户中心</h3>
@@ -12,73 +23,54 @@
 				</div>
 		<div class="right_content clearfix">
 				<h3 class="common_title2">全部订单</h3>
+				{% for order in orderp %}
 				<ul class="order_list_th w978 clearfix">
-					<li class="col01">2016-8-21 17:36:24</li>
-					<li class="col02">订单号：56872934</li>
-					<li class="col02 stress">未支付</li>		
+					<li class="col01">{{order.orderdate}}</li>
+					<li class="col02">订单号：{{order.orderid}}</li>
+					<li class="col02 stress">{% if order.status == 0 %}未支付{%else%}已支付{%endif%}</li>
 				</ul>
 
 				<table class="order_list_table w980">
 					<tbody>
 						<tr>
 							<td width="55%">
-								<ul class="order_goods_list clearfix">					
-									<li class="col01"><img src="/static/images/goods02.jpg"></li>
-									<li class="col02">嘎啦苹果嘎啦苹果<em>11.80元/500g</em></li>	
-									<li class="col03">1</li>
-									<li class="col04">11.80元</li>	
+								{%for detial in order.orderdetial_set.all%}
+								<ul class="order_goods_list clearfix">
+									<li class="col01"><img src="/static/{{detial.goods.gpic}}"></li>
+									<li class="col02">{{detial.goods.gtitle|truncatechars:15}}<em><span>{{detial.price}}</span>/{{detial.goods.gunit}}</em></li>
+									<li class="col03">{{detial.count}}</li>
+									<li class="col04"><span></span>元</li>
 								</ul>
-								<ul class="order_goods_list clearfix">					
-									<li class="col01"><img src="/static/images/goods02.jpg"></li>
-									<li class="col02">嘎啦苹果嘎啦苹果<em>11.80元/500g</em></li>	
-									<li class="col03">1</li>
-									<li class="col04">11.80元</li>	
-								</ul>
+								{%endfor%}
 							</td>
-							<td width="15%">33.60元</td>
-							<td width="15%">待付款</td>
+							<td width="15%" class="totalall">{{order.total}}</td>
+							<td width="15%">{% if order.status == 0 %}代付款{%else%}已支付{%endif%}</td>
+							{% if order.status == 0 %}
 							<td width="15%"><a href="#" class="oper_btn">去付款</a></td>
-						</tr>
-					</tbody>
-				</table>
-				
-				<ul class="order_list_th w978 clearfix">
-					<li class="col01">2016-8-21 17:36:24</li>
-					<li class="col02">订单号：56872934</li>
-					<li class="col02 stress">已支付</li>			
-				</ul>
-				<table class="order_list_table w980">
-					<tbody>
-						<tr>
-							<td width="55%">
-								<ul class="order_goods_list clearfix">					
-									<li class="col01"><img src="/static/images/goods02.jpg"></li>
-									<li class="col02">嘎啦苹果嘎啦苹果<em>11.80元/500g</em></li>	
-									<li class="col03">1</li>
-									<li class="col04">11.80元</li>	
-								</ul>
-								<ul class="order_goods_list clearfix">					
-									<li class="col01"><img src="/static/images/goods02.jpg"></li>
-									<li class="col02">嘎啦苹果嘎啦苹果<em>11.80元/500g</em></li>
-									<li class="col03">1</li>
-									<li class="col04">11.80元</li>	
-								</ul>
-							</td>
-							<td width="15%">33.60元</td>
-							<td width="15%">已付款</td>
+							{%else%}
 							<td width="15%"><a href="#" class="oper_btn">查看物流</a></td>
+							{%endif%}
 						</tr>
 					</tbody>
 				</table>
+				{%endfor%}
 
 				<div class="pagenation">
-					<a href="#"><上一页</a>
-					<a href="#" class="active">1</a>
-					<a href="#">2</a>
-					<a href="#">3</a>
-					<a href="#">4</a>
-					<a href="#">5</a>
-					<a href="#">下一页></a>
+					{%if orderp.has_previous%}
+					<a href="?p=1">首页</a>
+					<a href="?p={{orderp.number|add:-1}}">上一页</a>
+					{%endif%}
+					{%for p in plist%}
+					{%if p == orderp.number%}
+					<a href="#" class="active">{{p}}</a>
+					{%else%}
+					<a href="?p={{p}}">{{p}}</a>
+					{%endif%}
+					{%endfor%}
+					{%if orderp.has_next%}
+					<a href="?p={{orderp.number|add:1}}">下一页</a>
+					<a href="?p={{orderp.paginator.num_pages}}">末页</a>
+					{%endif%}
 				</div>
 		</div>
 	</div>

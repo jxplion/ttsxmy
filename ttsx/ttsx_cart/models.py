@@ -12,8 +12,8 @@ class OrderMain(models.Model):
     orderid = models.CharField(max_length=20, primary_key=True)
     user = models.ForeignKey('ttsx_user.Userinfo')
     orderdate = models.DateTimeField(auto_now_add=True)
-    total = models.DecimalField(max_digits=8, decimal_places=2)
-    status = models.IntegerField()
+    total = models.DecimalField(max_digits=8, decimal_places=2,default=0)
+    status = models.IntegerField(default=0)
 
 
 class OrderDetial(models.Model):

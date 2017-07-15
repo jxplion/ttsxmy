@@ -27,8 +27,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('orderid', models.CharField(max_length=20, serialize=False, primary_key=True)),
                 ('orderdate', models.DateTimeField(auto_now_add=True)),
-                ('total', models.DecimalField(max_digits=8, decimal_places=2)),
-                ('status', models.IntegerField()),
+                ('total', models.DecimalField(default=0, max_digits=8, decimal_places=2)),
+                ('status', models.IntegerField(default=0)),
                 ('user', models.ForeignKey(to='ttsx_user.Userinfo')),
             ],
         ),

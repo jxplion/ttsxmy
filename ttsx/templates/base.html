@@ -46,6 +46,7 @@
 				<form method='get' action="/search/" target="_blank">
 				<input type="text" class="input_text fl" name="q" placeholder="搜索商品">
 				<input type="submit" class="input_btn fr" value="搜索">
+				</form>
 			</div>
 	</div>
 	{%else%}
@@ -55,6 +56,7 @@
 			<form method='get' action="/search/" target="_blank">
 			<input type="text" class="input_text fl" name="q" placeholder="搜索商品">
 			<input type="submit" class="input_btn fr" value="搜索">
+			</form>
 		</div>
 		<div class="guest_cart fr">
 			<a href="/cart/" class="cart_name fl">我的购物车</a>
@@ -63,11 +65,14 @@
 	</div>
 	<script>
 	//先判断登录，如果登录再获取购物车数量
-	if($('.login_btn').text().indexOf('登录') < 0){//已登录
+	function cart1() {
+		if($('.login_btn').text().indexOf('登录') < 0){//已登录
         $.get('/cart/count/',function (data) {
 			$('#show_count').text(data.cart_count);
         });
     }
+    }
+	cart1()
 	</script>
 	{%endif%}
 	{%endif%}

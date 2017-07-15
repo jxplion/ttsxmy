@@ -1,8 +1,10 @@
 # coding=utf-8
+from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from models import *
 from ttsx_p.models import GoodsInfo
+from ttsx_cart.models import OrderMain, OrderDetial
 from hashlib import sha1
 from datetime import datetime, timedelta
 
@@ -106,7 +108,20 @@ def center(request):
 @yanzheng
 def order(request):
     ui = Userinfo.objects.get(id=request.session['uid'])
-    context = {'title':'订单中心','ui':ui}
+    pindex = request.GET.get('p','1')
+    orderm = OrderMain.objects.filter(user_id=ui).order_by('-orderdate')
+    paginator = Paginator(orderm, 1)
+    orderp = paginator.page(pindex)
+    plist = []
+    if paginator.num_pages < 5:
+        plist = orderp
+    elif orderp.number < 3:
+        plist = range(1,6)
+    elif orderp.number > paginator.num_pages-2:
+        plist = range(paginator.num_pages-4, paginator.num_pages+1)
+    else:
+        plist = range(orderp.number-2, orderp.number+3)
+    context = {'title':'订单中心','ui':ui, 'orderp':orderp, 'plist':plist}
     return render(request, 'ttsx_user/order.html', context)
 
 

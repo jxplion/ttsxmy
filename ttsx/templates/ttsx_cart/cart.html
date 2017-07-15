@@ -1,7 +1,6 @@
 {%extends 'base.html'%}
 {%block head%}
 <script>
-
 	var checked_item = [];
 	var t_all = 0;
 	function t() {
@@ -44,6 +43,18 @@
 			itemnum = -1; // 数量
 			jiajian(obj,itemnum,num1);
 	} //减
+	function del(id) {
+		if (confirm('删除该商品吗')){
+			$.get('/cart/del/', {'del_id':id}, function (dat) {
+				if(dat.isdel){
+				    $('#'+id).remove();
+				}
+				else{
+				    alert('失败')
+				}
+            });
+		}
+    }
 	$(function  () {
 		t();
 
@@ -76,22 +87,6 @@
 			jiajian($(this),itemnum,num1);
 		}); // 离开修改数量
     });
-	function goorder() {
-		$(':checked:not(#check_all)').each(function () {
-				checked_item.push($(this).parents('.cart_list_td').prop('id'));
-                });
-		checked_item = checked_item.join(',');
-		$.get('/cart/reo/', {'clist':checked_item}, function (dat) {
-					if(dat.isorder){
-						$.get('/cart/reorder/', {'cstr':dat.cstr}, function (dat) {
-						    location.href = '/cart/reorder/'
-                        });
-					}else{
-
-					}
-        });
-		checked_item = []
-    }//去结算
 </script>
 {%endblock head%}
 
@@ -106,10 +101,12 @@
 		<li class="col05">小计</li>
 		<li class="col06">操作</li>
 	</ul>
+	<form method="post" action="/cart/reorder/">
+	{%csrf_token%}
 	{%for cart in cart_list%}
 	<ul class="cart_list_td clearfix" id="{{cart.id}}">
 		<li class="col01">
-			<input type="checkbox" name="" checked>
+			<input type="checkbox" name="cart_id" value="{{cart.id}}" checked>
 		</li>
 		<li class="col02"><img src="/static/{{cart.goods.gpic}}"></li>
 		<li class="col03">{{cart.goods.gtitle}}<br><em>{{cart.goods.gprice}}元/{{cart.goods.gunit}}</em></li>
@@ -124,7 +121,7 @@
 			<input type="hidden" value="{{cart.goods_id}}">
 		</li>
 		<li class="col07"></li>
-		<li class="col08"><a href="javascript:;">删除</a></li>
+		<li class="col08"><a href="javascript:del({{cart.id}});">删除</a></li>
 	</ul>
 	{%endfor%}
 
@@ -132,6 +129,7 @@
 		<li class="col01"><input type="checkbox" id="check_all" name="" checked=""></li>
 		<li class="col02">全选</li>
 		<li class="col03">合计(不含运费)：<span>¥</span><em></em><br>共计<b></b>件商品</li>
-		<li class="col04"><a id="haha" href="javascript:goorder();">去结算</a></li>
+		<li class="col04"><input type="submit" id="haha" value="去结算"></li>
 	</ul>
+	</form>
 	{%endblock body%}
